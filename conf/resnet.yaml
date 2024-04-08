@@ -1,0 +1,57 @@
+seed: 42
+code_root_path: /work1/cchen/code/toy/lightning-template/
+
+data:
+  num_workers: 8
+  batch_size: 8
+  data_path: ${code_root_path}/data/timit
+  filelist_path: ${code_root_path}/data/timit
+  max_frames: 32000
+  val_max_frames: 480000
+  max_video_frames: 50
+  val_max_video_frames: 750
+  val_batch_size: 1
+  
+checkpoint:
+  save_last: True
+  save_top_k: 10
+  monitor: monitor_step
+  mode: max
+  filename: "{epoch}-{step}"
+  
+# checkpoint:
+#   save_last: True
+#   save_top_k: 10
+#   monitor: val_loss
+#   mode: min
+#   filename: "{epoch}-{step}-{val_loss}"
+
+trainer:
+  devices: 1
+  accelerator: gpu
+  accumulate_grad_batches: 1
+  max_epochs: 100
+  max_steps: 1000000
+  log_every_n_steps: 50
+  val_check_interval: 5000
+  check_val_every_n_epoch: null
+  gradient_clip_val: 5
+
+log:
+  log_dir: timit/
+
+model:
+  devices: ${trainer.devices}
+  max_epochs: ${trainer.max_epochs}
+  batch_size: ${data.batch_size}
+  accumulate_grad_batches: ${trainer.accumulate_grad_batches}
+  lr: 2e-4
+  lrs: constant
+  warm_up_ratio: 0.1
+  relu_type: swish
+  
+predict:
+  output_dir: 
+  ckpt_path: 
+
+ckpt_path: 
